@@ -6,6 +6,8 @@ import { Addition } from './classes/addition.class';
 import { Division } from './classes/division.class';
 import { Multiply } from './classes/multiply.class';
 import { Subtraction } from './classes/subtraction.class';
+import { ResponseColorBuilder } from './responseBuilder/responseColorBuilder.class';
+import { ResponseNumberBuilder } from './responseBuilder/responseNumberBuilder.class';
 
 @Module({
     controllers:[CalcController],
@@ -27,6 +29,14 @@ import { Subtraction } from './classes/subtraction.class';
             provide: "Operation/",
             useClass: Division
         },
+        {
+            provide:"StructureNumber",
+            useClass: ResponseNumberBuilder
+        },
+        {
+            provide:"StructureColor",
+            useClass: ResponseColorBuilder
+        }
     ]
 })
 export class CalcModule {}

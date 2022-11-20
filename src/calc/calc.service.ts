@@ -1,7 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { ModuleRef } from "@nestjs/core";
 import { RequestDTO } from "./dto/request.dto";
+import { BuildInterface } from "./interfaces/build.interface";
 import { CalcInterface } from "./interfaces/calc.interface";
+import { ResponseNumberInterface } from "./interfaces/responseNumber.interface";
 
 @Injectable()
 export class CalcService{
@@ -10,6 +12,8 @@ export class CalcService{
     }
     async getResult(requestDTO:RequestDTO) {
     const operator = await this.moduleRef.resolve<CalcInterface>(`Operation${requestDTO.operator}`);
-    return operator.calculate(requestDTO.number1,requestDTO.number2);
+    const number =  operator.calculate(requestDTO.number1,requestDTO.number2);// number
+    const responseStructure = await this.moduleRef.resolve<BuildInterface>(`Structure${requestDTO.structure}`);
+    return responseStructure.build(number);
     }
 }
