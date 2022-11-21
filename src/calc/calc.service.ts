@@ -21,7 +21,7 @@ export class CalcService {
         return responseStructure.build(numberResult);
     }
 
-    // this function get calculate the result.
+    // this function calculate the result.
     // the split function devide it by operators. 
     //(2 array) `numbersClass` is for the numbers and `operators` - is for the operators . 
     // this function doesn't support the order of operators.
