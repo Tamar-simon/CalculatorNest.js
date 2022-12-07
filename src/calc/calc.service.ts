@@ -25,22 +25,45 @@ export class CalcService {
     // the split function devide it by operators. 
     //(2 array) `numbersClass` is for the numbers and `operators` - is for the operators . 
     // this function doesn't support the order of operators.
-    //  this expression `2+5*6+2-1` will retrive 43 instead of 33.
+    //  this expression `2+5*6+2-1` will retrive of 33.
 
     // for example :
     // calculateString = '2+5*6+2-1';
     // numbers: [2,5,6,2,1]
     // operators: [ "+", "*", "+", "-"]
+
+    //in the first iteration calculate  multiply and divide before the plus and minus operation.
+    // numbers: [ 2, 30, 2, 1 ]
+    // operators:[ '+', '+', '-' ]
+    //after calculate all the results.
+
+  
     private async calculateResult(numbersClass: NumbersList, operators: OperatorsList) {
-        let numberResult: number = 0;
+        
+        for (let i = 0; i < operators.operators.length; i++) {
+            let calculate: number = 0;
+            const currentOperator = operators.operators[i];
+            if(currentOperator === "*" || currentOperator === "/"){
+                calculate = await this.claculate2NumbersWithOperator(numbersClass.numbers[i], numbersClass.numbers[i+1],currentOperator);
+                numbersClass.numbers[i] = calculate;
+                numbersClass.numbers.splice(i+1, 1);
+                operators.operators.splice(i, 1);
+            }
+        }
+
+        let result: number = 0;
         for (let i = 0; i < operators.operators.length; i++) {
             const currentOperator = operators.operators[i];
-            const operatorInstance = await this.moduleRef.resolve<CalcInterface>(`Operation${currentOperator}`);
-            const number1 = i == 0 ? numbersClass.numbers[i] : numberResult;//from the second entry retrive total members.
+            const number1 = i == 0 ? numbersClass.numbers[i] : result;//from the second entry retrive total members.
             const number2 = numbersClass.numbers[i + 1];
-            numberResult = operatorInstance.calculate(number1, number2);
+            result = await this.claculate2NumbersWithOperator(number1, number2,currentOperator);
         }
-        return numberResult;
+        return result;
+    }
+
+    private async claculate2NumbersWithOperator(number1: number,number2:number,operator:string){
+        const operatorInstance = await this.moduleRef.resolve<CalcInterface>(`Operation${operator}`);
+        return operatorInstance.calculate(number1, number2);
     }
 
 }
